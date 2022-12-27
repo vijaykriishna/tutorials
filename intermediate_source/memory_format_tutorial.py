@@ -24,7 +24,7 @@ For example, 10x3x16x16 batch in Channels last format will have strides equal to
 """
 
 ######################################################################
-# Channels last memory format is implemented for 4D NCWH Tensors only.
+# Channels last memory format is implemented for 4D NCHW Tensors only.
 #
 
 ######################################################################
@@ -151,7 +151,8 @@ if torch.backends.cudnn.version() >= 7603:
 ######################################################################
 # Performance Gains
 # --------------------------------------------------------------------
-# The most significant performance gains are observed on NVidia's
+# Channels last memory format optimizations are available on both GPU and CPU.
+# On GPU, the most significant performance gains are observed on NVidia's
 # hardware with Tensor Cores support running on reduced precision
 # (``torch.float16``).
 # We were able to archive over 22% perf gains with channels last
@@ -241,6 +242,11 @@ if torch.backends.cudnn.version() >= 7603:
 #
 
 ######################################################################
+# The following list of models has the full support of Channels last and showing 26%-76% perf gains on Intel(R) Xeon(R) Ice Lake (or newer) CPUs:
+# ``alexnet``, ``densenet121``, ``densenet161``, ``densenet169``, ``googlenet``, ``inception_v3``, ``mnasnet0_5``, ``mnasnet1_0``, ``resnet101``, ``resnet152``, ``resnet18``, ``resnet34``, ``resnet50``, ``resnext101_32x8d``, ``resnext50_32x4d``, ``shufflenet_v2_x0_5``, ``shufflenet_v2_x1_0``, ``squeezenet1_0``, ``squeezenet1_1``, ``vgg11``, ``vgg11_bn``, ``vgg13``, ``vgg13_bn``, ``vgg16``, ``vgg16_bn``, ``vgg19``, ``vgg19_bn``, ``wide_resnet101_2``, ``wide_resnet50_2``
+#
+
+######################################################################
 # Converting existing models
 # --------------------------
 #
@@ -267,9 +273,9 @@ output = model(input)
 # will restore channels last memory format and benefit from faster
 # kernels.
 #
-# But operatos that does not support channels last does introduce
+# But operators that does not support channels last does introduce
 # overhead by permutation. Optionally, you can investigate and identify
-# operatos in your model that does not support channels last, if you
+# operators in your model that does not support channels last, if you
 # want to improve the performance of converted model.
 #
 # That means you need to verify the list of used operators
